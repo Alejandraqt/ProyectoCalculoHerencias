@@ -1,5 +1,5 @@
 package view;
 
-public class Vista {
+public class View {
 
 }
