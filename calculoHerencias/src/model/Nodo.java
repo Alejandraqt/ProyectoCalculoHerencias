@@ -36,7 +36,7 @@ public class Nodo {
     }
    
     public void imprimirPersonita() {
-        System.out.println(this.getPersonita());
+        System.out.println(this.getPersonita().getNombre());
     }
     
 }

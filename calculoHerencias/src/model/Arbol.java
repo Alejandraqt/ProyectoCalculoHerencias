@@ -1,5 +1,7 @@
 package model;
 
+import treestring.NodoCadena;
+
 public class Arbol {
 
     private Nodo raiz;
@@ -33,23 +35,17 @@ public class Arbol {
         if (this.raiz == null) {
             this.raiz = new Nodo(personita);
         } else {
-            this.insertar(this.raiz, personita);
+            insertar(this.raiz, personita);
         }
     }
 
     private void insertar(Nodo padre, Persona personita) {
-        if (personita.equals(padre.getIzquierda().getPersonita())) {
-            if (padre.getIzquierda() == null) {
-                padre.setIzquierda(new Nodo(personita));
-            } else {
-                this.insertar(padre.getIzquierda(), personita);
-            }
-        } else if (personita.equals(padre.getDerecha().getPersonita())) {
-            if (padre.getDerecha() == null) {
-                padre.setDerecha(new Nodo(personita));
-            } else {
-                this.insertar(padre.getDerecha(), personita);
-            }
+        if (padre.getIzquierda() == null) {
+            padre.setIzquierda(new Nodo(personita));
+        } else if (padre.getDerecha() == null) {
+            padre.setDerecha(new Nodo(personita));
+        } else {
+            insertar(padre.getIzquierda(), personita);
         }
     }
 

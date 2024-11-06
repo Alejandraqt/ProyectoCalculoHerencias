@@ -16,8 +16,10 @@ public class Controller {
 
     public void datosBase(){        
 
-        arbolito.insertar(new Persona("Alex", 0));
-        arbolito.insertar(new Persona("Karina", 0));
+        Persona Alex = new Persona("Alex", 0);
+        arbolito.insertar(Alex);
+
+        arbolito.insertar(Alex, new Persona("Karina", 0));
         arbolito.insertar(new Persona("Carlos", 0));
         arbolito.insertar(new Persona("Ana", 0));
         arbolito.insertar(new Persona("Luis", 0));
@@ -26,16 +28,6 @@ public class Controller {
         arbolito.insertar(new Persona("Laura", 0));
         arbolito.insertar(new Persona("Juan", 0));
         arbolito.insertar(new Persona("Paula", 0));
-        arbolito.insertar(new Persona("Pedro", 0));
-        arbolito.insertar(new Persona("Carmen", 0));
-        arbolito.insertar(new Persona("Sofía", 0));
-        arbolito.insertar(new Persona("Miguel", 0));
-        arbolito.insertar(new Persona("Andrea", 0));
-        arbolito.insertar(new Persona("Javier", 0));
-        arbolito.insertar(new Persona("Rosa", 0));
-        arbolito.insertar(new Persona("Alberto", 0));
-        arbolito.insertar(new Persona("Raquel", 0));
-        arbolito.insertar(new Persona("Fernando", 0)); 
 
     }
 
