@@ -1,5 +1,7 @@
 package model;
 
+import view.*;
+
 public class Nodo {
     
     private Persona personita;
@@ -36,7 +38,7 @@ public class Nodo {
     }
    
     public void imprimirPersonita() {
-        System.out.println(this.getPersonita().getNombre());
+        View.imprimirMensajeLn(this.getPersonita().getNombre() + " (" + this.getPersonita().getPorcentaje() + "%)");
     }
     
 }
