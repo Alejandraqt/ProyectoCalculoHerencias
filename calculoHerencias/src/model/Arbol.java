@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Map;
+
 import view.View;
 
 public class Arbol {
@@ -31,7 +33,7 @@ public class Arbol {
 
     }
 
-    public void insertar(Persona personita) {
+    public void insertar(Map<String, Object> personita ) {
         if (this.raiz == null) {
             this.raiz = new Nodo(personita);
         } else {
@@ -39,7 +41,7 @@ public class Arbol {
         }
     }
 
-    public void insertar(Nodo padre, Persona personita) {
+    public void insertar(Nodo padre, Map<String, Object> personita) {
         if (padre.getIzquierda() == null) {
             padre.setIzquierda(new Nodo(personita));
         } else if (padre.getDerecha() == null) {
@@ -98,12 +100,13 @@ public class Arbol {
     }
     
     private void imprimirArbolRecursivo(Nodo nodo, String prefijo, boolean esUltimo) {
+
         if (nodo != null) {
             View.imprimirMensajeNoLn(prefijo);
     
             // Cambia el prefijo para mostrar una línea si no es el último nodo
             View.imprimirMensajeNoLn(esUltimo ? "└── " : "├── ");
-            View.imprimirMensajeLn(nodo.getPersonita().getNombre() + " (" + nodo.getPersonita().getPorcentaje() + "%)");
+            View.imprimirMensajeLn(nodo.getPersonita().get("nombre") + " (" + nodo.getPersonita().get("porcentaje") + "%)");
     
             // Construir el prefijo para los nodos hijos
             prefijo += esUltimo ? "    " : "│   ";
@@ -116,7 +119,7 @@ public class Arbol {
 
     public void calcularHerenciaInicial(double porcentajeInicial) {
         if (raiz != null) {
-            raiz.getPersonita().setPorcentaje(porcentajeInicial); //Establece el porcentaje de la raíz
+            raiz.getPersonita().put("porcentaje", porcentajeInicial); //Establece el porcentaje de la raíz
             calcularHerencia(raiz);
         }
     }
@@ -130,21 +133,21 @@ public class Arbol {
         if (nodo.getIzquierda() != null) numHijos++;
         if (nodo.getDerecha() != null) numHijos++;
         
-        //Distribuye el porcentaje entre hijos
         if (numHijos > 0) {
-            double porcentajePorHijo = nodo.getPersonita().getPorcentaje() / numHijos;
+            double porcentajePorHijo = (double) nodo.getPersonita().get("porcentaje")/ numHijos;
             
             if (nodo.getIzquierda() != null) {
-                nodo.getIzquierda().getPersonita().setPorcentaje(porcentajePorHijo);
+                nodo.getIzquierda().getPersonita().put("porcentaje", porcentajePorHijo);
                 calcularHerencia(nodo.getIzquierda());
             }
-            
+    
             if (nodo.getDerecha() != null) {
-                nodo.getDerecha().getPersonita().setPorcentaje(porcentajePorHijo);
+                nodo.getDerecha().getPersonita().put("porcentaje", porcentajePorHijo);
                 calcularHerencia(nodo.getDerecha());
             }
+            
         }
-    }
+    }   
 }
  
 

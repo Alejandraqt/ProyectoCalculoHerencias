@@ -1,23 +1,25 @@
 package model;
 
+import java.util.Map;
+
 import view.*;
 
 public class Nodo {
     
-    private Persona personita;
+    private Map<String, Object> personita;
     private Nodo izquierda, derecha;
 
-    public Nodo(Persona personita) {
+    public Nodo(Map<String, Object> personita) {
         this.personita = personita;
         izquierda=null;
         derecha=null;
     }
 
-    public Persona getPersonita() {
+    public Map<String, Object> getPersonita() {
         return personita;
     }
 
-    public void setPersonita(Persona personita) {
+    public void setPersonita(Map<String, Object> personita) {
         this.personita = personita;
     }
 
@@ -38,7 +40,9 @@ public class Nodo {
     }
    
     public void imprimirPersonita() {
-        View.imprimirMensajeLn(this.getPersonita().getNombre() + " (" + this.getPersonita().getPorcentaje() + "%)");
+        String nombre = (String) personita.get("nombre");
+        double porcentaje = (double) personita.get("porcentaje");
+        View.imprimirMensajeLn(nombre + " (" + porcentaje + "%)");
     }
     
 }
