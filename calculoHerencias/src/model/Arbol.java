@@ -128,26 +128,37 @@ public class Arbol {
         if (nodo == null) {
             return;
         }
-        
+    
         int numHijos = 0;
+    
+        // Cuenta los hijos del nodo actual
         if (nodo.getIzquierda() != null) numHijos++;
         if (nodo.getDerecha() != null) numHijos++;
-        
+    
+        // Distribuye el porcentaje entre los hijos y conserva el porcentaje del padre
         if (numHijos > 0) {
-            double porcentajePorHijo = (double) nodo.getPersonita().get("porcentaje")/ numHijos;
-            
+            //double porcentajeParaHijos = (double) nodo.getPersonita().get("porcentaje") / 2; // Solo reparte el 50%
+            double porcentajePorHijo = (double) nodo.getPersonita().get("porcentaje") / numHijos;
+    
+            // Asigna porcentaje al hijo izquierdo si existe
             if (nodo.getIzquierda() != null) {
                 nodo.getIzquierda().getPersonita().put("porcentaje", porcentajePorHijo);
                 calcularHerencia(nodo.getIzquierda());
             }
     
+            // Asigna porcentaje al hijo derecho si existe
             if (nodo.getDerecha() != null) {
                 nodo.getDerecha().getPersonita().put("porcentaje", porcentajePorHijo);
                 calcularHerencia(nodo.getDerecha());
             }
-            
         }
-    }   
+
+        // El nodo actual "muere" y su porcentaje queda en 0
+        raiz.getPersonita().put("porcentaje", 0);
+    }
+//double porcentajeParaHijos = (double) nodo.getPersonita().get("porcentaje") / 2; // Solo reparte el 50%
+//nodo.getIzquierda().getPersonita().put("porcentaje", porcentajePorHijo);
+//nodo.getDerecha().getPersonita().put("porcentaje", porcentajePorHijo);
 }
  
 
