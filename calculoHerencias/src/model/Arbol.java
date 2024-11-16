@@ -7,6 +7,9 @@ import view.View;
 public class Arbol {
 
     private Nodo raiz;
+    private boolean primeraVez;
+    double porcentajeParaHijos;
+    double porcentajePorHijo;
 
     public Arbol() {
        this.raiz = null;
@@ -100,17 +103,22 @@ public class Arbol {
     }
     
     private void imprimirArbolRecursivo(Nodo nodo, String prefijo, boolean esUltimo) {
-
+    
         if (nodo != null) {
             View.imprimirMensajeNoLn(prefijo);
     
             // Cambia el prefijo para mostrar una línea si no es el último nodo
             View.imprimirMensajeNoLn(esUltimo ? "└── " : "├── ");
-            View.imprimirMensajeLn(nodo.getPersonita().get("nombre") + " (" + nodo.getPersonita().get("porcentaje") + "%)");
-    
+            
+            // Muestra el porcentaje recibido y el neto (porcentaje recibido menos lo que se reparte)
+            double porcentajeRecibido = (double) nodo.getPersonita().get("porcentaje");
+            double porcentajeNeto = (double) nodo.getPersonita().get("porcentajeNeto");
+            
+            View.imprimirMensajeLn(nodo.getPersonita().get("nombre") + " (" + porcentajeRecibido + "% - Neto: " + porcentajeNeto + "%)");
+            
             // Construir el prefijo para los nodos hijos
             prefijo += esUltimo ? "    " : "│   ";
-    
+            
             // Llamada recursiva para los hijos izquierdo y derecho
             imprimirArbolRecursivo(nodo.getIzquierda(), prefijo, nodo.getDerecha() == null);
             imprimirArbolRecursivo(nodo.getDerecha(), prefijo, true);
@@ -119,12 +127,20 @@ public class Arbol {
 
     public void calcularHerenciaInicial(double porcentajeInicial) {
         if (raiz != null) {
-            raiz.getPersonita().put("porcentaje", porcentajeInicial); //Establece el porcentaje de la raíz
-            calcularHerencia(raiz);
+            if(primeraVez){
+                // El porcentaje para los hijos es la herencia inicial completa
+                porcentajeParaHijos = porcentajeInicial;
+                primeraVez = false;
+            }
+            // la raiz no conserva nada, su porcentaje se reparte entre sus hijos
+            raiz.getPersonita().put("porcentaje", 0.0);
+            
+            // Reparte el 50% entre los hijos de la raiz
+            repartirEntreHijos(raiz, porcentajeInicial);
         }
     }
-
-    private void calcularHerencia(Nodo nodo) {
+    
+    private void repartirEntreHijos(Nodo nodo, double porcentajePadre) {
         if (nodo == null) {
             return;
         }
@@ -135,30 +151,75 @@ public class Arbol {
         if (nodo.getIzquierda() != null) numHijos++;
         if (nodo.getDerecha() != null) numHijos++;
     
-        // Distribuye el porcentaje entre los hijos y conserva el porcentaje del padre
+        // Si el nodo tiene hijos, distribuye la herencia entre ellos
         if (numHijos > 0) {
-            //double porcentajeParaHijos = (double) nodo.getPersonita().get("porcentaje") / 2; // Solo reparte el 50%
-            double porcentajePorHijo = (double) nodo.getPersonita().get("porcentaje") / numHijos;
+            // Los hijos reciben la mitad de la herencia del padre
+            double porcentajeParaHijos = porcentajePadre; // 100% de la herencia de la raiz
+            double porcentajePorHijo = porcentajeParaHijos / numHijos; // Divide la herencia entre los hijos
     
-            // Asigna porcentaje al hijo izquierdo si existe
+            // Asigna el porcentaje a los hijos
             if (nodo.getIzquierda() != null) {
                 nodo.getIzquierda().getPersonita().put("porcentaje", porcentajePorHijo);
-                calcularHerencia(nodo.getIzquierda());
+                // Calcula el porcentaje neto del hijo
+                double porcentajeNeto = porcentajePorHijo / 2;
+                nodo.getIzquierda().getPersonita().put("porcentajeNeto", porcentajeNeto);
+                // Llama a repartir la herencia entre los nietos
+                repartirEntreNietos(nodo.getIzquierda(), porcentajePorHijo);
             }
     
-            // Asigna porcentaje al hijo derecho si existe
             if (nodo.getDerecha() != null) {
                 nodo.getDerecha().getPersonita().put("porcentaje", porcentajePorHijo);
-                calcularHerencia(nodo.getDerecha());
+                // Calcula el porcentaje neto del hijo
+                double porcentajeNeto = porcentajePorHijo / 2;
+                nodo.getDerecha().getPersonita().put("porcentajeNeto", porcentajeNeto);
+                // Llama a repartir la herencia entre los nietos
+                repartirEntreNietos(nodo.getDerecha(), porcentajePorHijo);
             }
         }
-
-        // El nodo actual "muere" y su porcentaje queda en 0
-        raiz.getPersonita().put("porcentaje", 0);
     }
-//double porcentajeParaHijos = (double) nodo.getPersonita().get("porcentaje") / 2; // Solo reparte el 50%
-//nodo.getIzquierda().getPersonita().put("porcentaje", porcentajePorHijo);
-//nodo.getDerecha().getPersonita().put("porcentaje", porcentajePorHijo);
+    
+    // Método para distribuir la mitad de lo que reciben los hijos entre sus hijos (los nietos)
+    private void repartirEntreNietos(Nodo nodo, double porcentajePadre) {
+        if (nodo == null) {
+            return;
+        }
+    
+        int numHijos = 0;
+    
+        // Cuenta los hijos del nodo actual
+        if (nodo.getIzquierda() != null) numHijos++;
+        if (nodo.getDerecha() != null) numHijos++;
+    
+        // Si el nodo tiene hijos, distribuye la herencia entre ellos
+        if (numHijos > 0) {
+            // La mitad de lo que recibe el hijo se reparte entre los nietos
+            double porcentajeParaNietos = porcentajePadre / 2; // Solo la mitad se reparte entre los nietos
+            double porcentajePorNieto = porcentajeParaNietos / numHijos; // Divide entre los nietos
+    
+            // Asigna el porcentaje a los nietos y calcula el porcentaje neto
+            if (nodo.getIzquierda() != null) {
+                nodo.getIzquierda().getPersonita().put("porcentaje", porcentajePorNieto);
+                // El porcentaje neto para el nieto es la mitad de lo que recibe
+                double porcentajeNetoNieto = porcentajePorNieto / 2;
+                nodo.getIzquierda().getPersonita().put("porcentajeNeto", porcentajeNetoNieto);
+                // Llama recursivamente para repartir entre los nietos de los nietos (si los hay)
+                repartirEntreNietos(nodo.getIzquierda(), porcentajePorNieto);
+            }
+    
+            if (nodo.getDerecha() != null) {
+                nodo.getDerecha().getPersonita().put("porcentaje", porcentajePorNieto);
+                // El porcentaje neto para el nieto es la mitad de lo que recibe
+                double porcentajeNetoNieto = porcentajePorNieto / 2;
+                nodo.getDerecha().getPersonita().put("porcentajeNeto", porcentajeNetoNieto);
+                // Llama recursivamente para repartir entre los nietos de los nietos (si los hay)
+                repartirEntreNietos(nodo.getDerecha(), porcentajePorNieto);
+            }
+        } else {
+            // Si el nodo no tiene hijos, se asigna el porcentaje sin dividirlo
+            nodo.getPersonita().put("porcentajeNeto", porcentajePadre);
+            nodo.getPersonita().put("porcentaje", porcentajePadre);
+        }
+    }
 }
  
 
