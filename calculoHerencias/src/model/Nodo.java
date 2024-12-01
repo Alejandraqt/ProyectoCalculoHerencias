@@ -1,48 +1,32 @@
 package model;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import view.*;
 
 public class Nodo {
     
-    private Map<String, Object> personita;
-    private Nodo izquierda, derecha;
+    private Map<String, Object> datosPersona;
+    private Map <String, Nodo> hijos;
 
-    public Nodo(Map<String, Object> personita) {
-        this.personita = personita;
-        izquierda=null;
-        derecha=null;
+    public Nodo() {
+        this.datosPersona = new HashMap<>();
+        this.hijos = new HashMap<>();
     }
 
-    public Map<String, Object> getPersonita() {
-        return personita;
+    public Map<String, Object> getDatosPersona() {
+        return datosPersona;
     }
 
-    public void setPersonita(Map<String, Object> personita) {
-        this.personita = personita;
+    public void setDatosPersona(Map<String, Object> datosPersona) {
+        this.datosPersona = datosPersona;
     }
 
-    public Nodo getIzquierda() {
-        return izquierda;
+    public Map<String, Nodo> getHijos() {
+        return hijos;
     }
 
-    public void setIzquierda(Nodo izquierda) {
-        this.izquierda = izquierda;
-    }
-
-    public Nodo getDerecha() {
-        return derecha;
-    }
-
-    public void setDerecha(Nodo derecha) {
-        this.derecha = derecha;
-    }
-   
-    public void imprimirPersonita() {
-        String nombre = (String) personita.get("nombre");
-        double porcentaje = (double) personita.get("porcentaje");
-        View.imprimirMensajeLn(nombre + " (" + porcentaje + "%)");
+    public void setHijos(Map<String, Nodo> hijos) {
+        this.hijos = hijos;
     }
     
 }

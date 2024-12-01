@@ -6,11 +6,13 @@ import java.util.Map;
 public class Persona {
 
     private String nombre;
+    private String cedula;
     private double porcentaje;
     private double porcentajeNeto;
 
-    public Persona(String nombre) {
+    public Persona(String nombre, String cedula) {
         this.nombre = nombre;
+        this.cedula = cedula;
         this.porcentaje = 0;
         this.porcentajeNeto = 0;
     }
@@ -21,6 +23,14 @@ public class Persona {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
     }
 
     public double getPorcentaje() {
@@ -39,12 +49,13 @@ public class Persona {
         this.porcentajeNeto = porcentajeNeto;
     }
 
-    public Map<String, Object> toDictionary() {
-        Map<String, Object> personaDict = new HashMap<>();
-        personaDict.put("nombre", this.nombre);
-        personaDict.put("porcentaje", this.porcentaje);
-        personaDict.put("porcentajeNeto", this.porcentajeNeto);
-        return personaDict;
+    public Map<String, Object> crearDiccionario() {
+        Map<String, Object> datosPersona = new HashMap<>();
+        datosPersona.put("nombre", this.nombre);
+        datosPersona.put("cedula", this.cedula);
+        datosPersona.put("porcentaje", this.porcentaje);
+        datosPersona.put("porcentajeNeto", this.porcentajeNeto);
+        return datosPersona;
     }
 
 }
